@@ -1,0 +1,283 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página Multimedia</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#0f0f0f,#1e1e2f,#121212);
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ANIMACIÓN DE ENTRADA */
+.presentacion{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    animation:desaparecer 3s forwards;
+    background:black;
+}
+
+.presentacion h1{
+    font-size:60px;
+    color:cyan;
+    text-shadow:0 0 20px cyan;
+    animation:zoom 2s infinite alternate;
+}
+
+.presentacion p{
+    margin-top:15px;
+    color:#ccc;
+}
+
+@keyframes zoom{
+    from{transform:scale(1);}
+    to{transform:scale(1.1);}
+}
+
+@keyframes desaparecer{
+    0%{opacity:1;}
+    80%{opacity:1;}
+    100%{
+        opacity:0;
+        visibility:hidden;
+        height:0;
+    }
+}
+
+/* CONTENIDO */
+.container{
+    width:90%;
+    margin:auto;
+    padding:20px;
+}
+
+.section{
+    margin-top:20px;
+    background:rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,255,255,0.3);
+}
+
+/* INPUTS */
+input, textarea{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+}
+
+button{
+    margin-top:10px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:cyan;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.4s;
+}
+
+button:hover{
+    background:purple;
+    color:white;
+    transform:scale(1.05);
+}
+
+/* GALERÍA */
+.gallery{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:20px;
+}
+
+.gallery img,
+.gallery video{
+    width:260px;
+    border-radius:15px;
+    box-shadow:0 0 20px cyan;
+    animation:aparecer 1s;
+}
+
+@keyframes aparecer{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* COMENTARIOS */
+.comment{
+    background:#111;
+    margin-top:15px;
+    padding:15px;
+    border-left:5px solid cyan;
+    border-radius:10px;
+    animation:comentario 0.7s ease;
+}
+
+@keyframes comentario{
+    from{
+        opacity:0;
+        transform:translateX(-50px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+footer{
+    margin-top:30px;
+    text-align:center;
+    padding:20px;
+    background:black;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- PRESENTACIÓN -->
+<div class="presentacion">
+    <h1>BIENVENIDO</h1>
+    <p>Página Multimedia con Animaciones</p>
+</div>
+
+<div class="container">
+
+    <!-- SUBIR ARCHIVOS -->
+    <div class="section">
+        <h2>Subir Videos, Fotos y Documentos</h2>
+
+        <input type="file" id="fileInput" multiple>
+        <button onclick="subirArchivos()">Subir</button>
+
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- COMENTARIOS -->
+    <div class="section">
+        <h2>Comentarios</h2>
+
+        <textarea id="comentario" rows="4"
+        placeholder="Escribe un comentario..."></textarea>
+
+        <button onclick="agregarComentario()">
+            Publicar Comentario
+        </button>
+
+        <div id="contenedorComentarios"></div>
+    </div>
+
+</div>
+
+<footer>
+    <p>© Página Web Multimedia</p>
+</footer>
+
+<script>
+
+// SUBIR ARCHIVOS
+function subirArchivos(){
+
+    const input = document.getElementById("fileInput");
+    const gallery = document.getElementById("gallery");
+
+    Array.from(input.files).forEach(file => {
+
+        const url = URL.createObjectURL(file);
+
+        // IMÁGENES
+        if(file.type.startsWith("image/")){
+
+            const img = document.createElement("img");
+            img.src = url;
+            gallery.appendChild(img);
+        }
+
+        // VIDEOS
+        else if(file.type.startsWith("video/")){
+
+            const video = document.createElement("video");
+            video.src = url;
+            video.controls = true;
+            gallery.appendChild(video);
+        }
+
+        // DOCUMENTOS
+        else{
+
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.target = "_blank";
+            link.innerHTML = "📄 " + file.name;
+
+            link.style.display = "block";
+            link.style.color = "cyan";
+            link.style.marginTop = "10px";
+
+            gallery.appendChild(link);
+        }
+
+    });
+
+}
+
+// COMENTARIOS
+function agregarComentario(){
+
+    const texto =
+    document.getElementById("comentario").value;
+
+    const contenedor =
+    document.getElementById("contenedorComentarios");
+
+    if(texto.trim() !== ""){
+
+        const nuevoComentario =
+        document.createElement("div");
+
+        nuevoComentario.classList.add("comment");
+
+        nuevoComentario.innerHTML = `
+            <h3>Usuario</h3>
+            <p>${texto}</p>
+        `;
+
+        contenedor.prepend(nuevoComentario);
+
+        document.getElementById("comentario").value = "";
+    }
+
+}
+
+</script>
+
+</body>
+</html>
+```
